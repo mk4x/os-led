@@ -1318,4 +1318,14 @@ int __sys_getsockopt(int fd, int level, int optname, char __user *optval,
 int __sys_setsockopt(int fd, int level, int optname, char __user *optval,
 		     int optlen);
 asmlinkage long sys_hellokernel(long param);
+
+// set input/output mode on GPIO pin
+asmlinkage long sys_gpio_configure(int pin, int mode);
+
+// writes value to GPIO pin
+asmlinkage long sys_gpio_write(int pin, int value);
+
+// reads value fro GPIO pin
+asmlinkage long sys_gpio_read(int pin);
+
 #endif

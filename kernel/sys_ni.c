@@ -391,4 +391,9 @@ COND_SYSCALL(setuid16);
 COND_SYSCALL(rseq);
 
 COND_SYSCALL(uretprobe);
+
+// our syscalls
 COND_SYSCALL(hellokernel);
+COND_SYSCALL(gpio_configure);
+COND_SYSCALL(gpio_write);
+COND_SYSCALL(gpio_read);
