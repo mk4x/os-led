@@ -70,7 +70,7 @@ void test_gpio_configure()
 
 	assert_syscall("Reject invalid mode",
 		       syscall(__NR_gpio_configure, 29, 5), 0);
-	printf("Finished testing gpio_configure()");
+	printf("Finished testing gpio_configure()\n");
 }
 void test_gpio_write()
 {

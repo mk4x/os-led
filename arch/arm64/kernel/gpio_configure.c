@@ -41,7 +41,7 @@ SYSCALL_DEFINE2(gpio_configure, int, pin, int, mode)
 	}
 
 	// Validate mode
-	if (mode != GPIO_INPUT || mode != GPIO_OUTPUT) {
+	if (mode != GPIO_INPUT && mode != GPIO_OUTPUT) {
 		printk(KERN_ERR "gpio_configure: Invalid mode %d (must be 0,1)",
 		       mode);
 		return -EINVAL;
@@ -80,7 +80,7 @@ SYSCALL_DEFINE2(gpio_configure, int, pin, int, mode)
 	iounmap(gpio_base);
 
 	printk(KERN_INFO "gpio_configure: Pin %d configured as %s\n", pin,
-	       mode == GPIO_MODE_OUTPUT ? "OUTPUT" : "INPUT");
+	       mode == GPIO_OUTPUT ? "OUTPUT" : "INPUT");
 
 	return 0;
 }
