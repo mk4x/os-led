@@ -840,8 +840,17 @@ __SYSCALL(__NR_mseal, sys_mseal)
 #define __NR_hellokernel 463
 __SYSCALL(__NR_hellokernel, sys_hellokernel)
 
+#define __NR_gpio_configure 464
+__SYSCALL(__NR_gpio_configure, sys_gpio_configure)
+
+#define __NR_gpio_write 465
+__SYSCALL(__NR_gpio_write, sys_gpio_write)
+
+#define __NR_gpio_read 466
+__SYSCALL(__NR_gpio_read, sys_gpio_read)
+
 #undef __NR_syscalls
-#define __NR_syscalls 464
+#define __NR_syscalls 467
 
 /*
  * 32 bit systems traditionally used different
