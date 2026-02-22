@@ -72,6 +72,7 @@ void test_gpio_configure()
 		       syscall(__NR_gpio_configure, 29, 5), 0);
 	printf("Finished testing gpio_configure()\n");
 }
+
 void test_gpio_write()
 {
 	printf("Testing gpio_write() - Not yet implemented\n");
@@ -79,7 +80,31 @@ void test_gpio_write()
 
 void test_gpio_read()
 {
-	printf("Testing gpio_read() - Not yet implemented\n");
+	printf("Testing gpio_read()\n");
+
+	syscall(__NR_gpio_configure, 29, GPIO_OUTPUT);
+
+	// Valids
+	assert_syscall("Read pin 29",
+		       syscall(__NR_gpio_read, 29), 1);
+
+	assert_syscall("Read pin 0",
+		       syscall(__NR_gpio_read, 0), 1);
+
+	assert_syscall("Read pin 17",
+		       syscall(__NR_gpio_read, 17), 1);
+
+	assert_syscall("Read pin 53",
+		       syscall(__NR_gpio_read, 53), 1);
+
+	// Invalids
+	assert_syscall("Reject negative pin",
+		       syscall(__NR_gpio_read, -1), 0);
+
+	assert_syscall("Reject pin > 53",
+		       syscall(__NR_gpio_read, 100), 0);
+
+	printf("Finished testing gpio_read()\n");
 }
 
 void test_blink()
