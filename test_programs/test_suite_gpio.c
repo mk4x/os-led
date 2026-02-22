@@ -75,7 +75,40 @@ void test_gpio_configure()
 
 void test_gpio_write()
 {
-	printf("Testing gpio_write() - Not yet implemented\n");
+	printf("Testing gpio_write()\n");
+
+	// Configure pin 29 as output first
+	syscall(__NR_gpio_configure, 29, GPIO_OUTPUT);
+
+	// Test valid writes
+	assert_syscall("Write 1 to pin 29",
+		       syscall(__NR_gpio_write, 29, 1), 1);
+
+	assert_syscall("Write 0 to pin 29",
+		       syscall(__NR_gpio_write, 29, 0), 1);
+
+	// Test valid pins
+	assert_syscall("Write to pin 0",
+		       syscall(__NR_gpio_write, 0, 1), 1);
+
+	assert_syscall("Write to pin 53",
+		       syscall(__NR_gpio_write, 53, 0), 1);
+
+	// Test invalid values
+	assert_syscall("Reject value 2",
+		       syscall(__NR_gpio_write, 29, 2), 0);
+
+	assert_syscall("Reject value -1",
+		       syscall(__NR_gpio_write, 29, -1), 0);
+
+	// Test invalid pins
+	assert_syscall("Reject negative pin",
+		       syscall(__NR_gpio_write, -1, 1), 0);
+
+	assert_syscall("Reject pin > 53",
+		       syscall(__NR_gpio_write, 100, 1), 0);
+
+	printf("Finished testing gpio_write()\n");
 }
 
 void test_gpio_read()
