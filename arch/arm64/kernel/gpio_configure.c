@@ -4,7 +4,7 @@
 #include <linux/errno.h>
 
 // GPIO config for PI 2 Zero
-#define GPIO_BASE 0xFE200000
+#define GPIO_BASE 0x3F000000
 #define GPIO_SIZE 0x1000
 
 // GPIO register offsets (function select)

@@ -4,7 +4,7 @@
 #include <linux/errno.h>
 
 // GPIO config for PI 2 Zero
-#define GPIO_BASE 0xFE200000
+#define GPIO_BASE 0x3F000000
 #define GPIO_SIZE 0x1000
 
 // GPIO register offsets
@@ -14,9 +14,9 @@
 #define GPFSEL3 0x0C // (pins 30-39)
 #define GPFSEL4 0x10 // (pins 40-49)
 #define GPFSEL5 0x14 // (pins 50-53)
-#define GPSET0  0x1C // Set pins high
-#define GPCLR0  0x28 // Set pins low
-#define GPLEV0  0x34 // Read pin levels
+#define GPSET0 0x1C // Set pins high
+#define GPCLR0 0x28 // Set pins low
+#define GPLEV0 0x34 // Read pin levels
 
 /*
 gpio_read
@@ -34,7 +34,8 @@ SYSCALL_DEFINE1(gpio_read, int, pin)
 
 	// Validate pin number
 	if (pin < 0 || pin > 53) {
-		printk(KERN_ERR "gpio_read: Invalid pin %d (Must be 0-53)", pin);
+		printk(KERN_ERR "gpio_read: Invalid pin %d (Must be 0-53)",
+		       pin);
 		return -EINVAL;
 	}
 
