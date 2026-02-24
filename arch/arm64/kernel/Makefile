@@ -34,7 +34,7 @@ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
 			   cpufeature.o alternative.o cacheinfo.o		\
 			   smp.o smp_spin_table.o topology.o smccc-call.o	\
 			   syscall.o proton-pack.o idle.o patching.o		\
-			   hellokernel.o gpio_configure.o gpio_read.o gpio_write.o pi/
+			   hellokernel.o gpio_configure.o gpio_read.o gpio_write.o gpio_common.o pi/
 
 obj-$(CONFIG_COMPAT)			+= sys32.o signal32.o			\
 					   sys_compat.o
