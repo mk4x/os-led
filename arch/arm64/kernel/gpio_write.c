@@ -2,22 +2,7 @@
 #include <linux/syscalls.h>
 #include <linux/io.h>
 #include <linux/errno.h>
-
-// GPIO config for PI 2 Zero
-#define GPIO_BASE 0x3F200000
-#define GPIO_SIZE 0x1000
-
-// GPIO register offsets
-#define GPFSEL0 0x00 // (pins 0-9)
-#define GPFSEL1 0x04 // (pins 10-19)
-#define GPFSEL2 0x08 // (pins 20-29)
-#define GPFSEL3 0x0C // (pins 30-39)
-#define GPFSEL4 0x10 // (pins 40-49)
-#define GPFSEL5 0x14 // (pins 50-53)
-#define GPSET0 0x1C // Set pins high (0-31 pins)
-#define GPSET1 0x20 // Set pins high (32-53 pins)
-#define GPCLR0 0x28 // Set pins low (0-31 pins)
-#define GPCLR1 0x2C // Set pins low (0-53 pins)
+#include "gpio_common.h"
 
 /*
 gpio_write
@@ -30,8 +15,6 @@ returns 0 on success, negative error code on fail
 */
 SYSCALL_DEFINE2(gpio_write, int, pin, int, value)
 {
-	void __iomem *gpio_base;
-
 	// Validate pin number
 	if (pin < 0 || pin > 53) {
 		printk(KERN_ERR "gpio_write: Invalid pin %d (Must be 0-53)",
@@ -47,13 +30,13 @@ SYSCALL_DEFINE2(gpio_write, int, pin, int, value)
 	}
 
 	// Remap GPIO registers into kernel's virtual memory
-	gpio_base = ioremap(GPIO_BASE, GPIO_SIZE);
-	if (!gpio_base) {
-		printk(KERN_ERR "gpio_write: Failed to map GPIO memory\n");
+	// This function will initialize the gpio_base and a pointer to the virtual
+	// memory address can then be used
+	if (gpio_hw_init())
 		return -ENOMEM;
-	}
+
 	// Set bit, wraparound if more than 32 to next GP function
-	u32 bit = 1 << (pin % 32);
+	__u32 bit = 1 << (pin % 32);
 
 	// Set or clear the pin based on value
 	if (pin < 32) {
@@ -67,9 +50,6 @@ SYSCALL_DEFINE2(gpio_write, int, pin, int, value)
 		else
 			iowrite32(bit, gpio_base + GPCLR1);
 	}
-
-	// Unmap the memory
-	iounmap(gpio_base);
 
 	return 0;
 }
