@@ -2,22 +2,7 @@
 #include <linux/syscalls.h>
 #include <linux/io.h>
 #include <linux/errno.h>
-
-// GPIO config for PI 2 Zero
-#define GPIO_BASE 0x3F200000
-#define GPIO_SIZE 0x1000
-
-// GPIO register offsets (function select)
-#define GPFSEL0 0x00 // (pins 0-9)
-#define GPFSEL1 0x04 // (pins 10-19)
-#define GPFSEL2 0x08 // (pins 20-29)
-#define GPFSEL3 0x0C // (pins 30-39)
-#define GPFSEL4 0x10 // (pins 40-49)
-#define GPFSEL5 0x14 // (pins 50-53)
-
-// Pin modes
-#define GPIO_INPUT 0
-#define GPIO_OUTPUT 1
+#include "gpio_common.h"
 
 /*
 gpio_configure
@@ -30,8 +15,7 @@ returns 0 on success, negative error code on fail
 */
 SYSCALL_DEFINE2(gpio_configure, int, pin, int, mode)
 {
-	void __iomem *gpio_base;
-	u32 reg_offset, bit_shift, value;
+	__u32 reg_offset, bit_shift, value;
 
 	// Validate pin number
 	if (pin < 0 || pin > 53) {
@@ -47,12 +31,11 @@ SYSCALL_DEFINE2(gpio_configure, int, pin, int, mode)
 		return -EINVAL;
 	}
 
-	// Remap GPIO registers into kernels virtual memory
-	gpio_base = ioremap(GPIO_BASE, GPIO_SIZE);
-	if (!gpio_base) {
-		printk(KERN_ERR "gpio_configure: Failed to map GPIO memory\n");
+	// Remap GPIO registers into kernels virtual memory using helper function
+	// This function will initialize the gpio_base and a pointer to the virtual
+	// memory address can then be used
+	if (gpio_hw_init())
 		return -ENOMEM;
-	}
 
 	// Now calculate which GPFSEL register to use
 	// Each register controls 10 pins
@@ -75,9 +58,6 @@ SYSCALL_DEFINE2(gpio_configure, int, pin, int, mode)
 
 	// Write modified value to memory
 	iowrite32(value, gpio_base + reg_offset);
-
-	// Unmap the memory
-	iounmap(gpio_base);
 
 	printk(KERN_INFO "gpio_configure: Pin %d configured as %s\n", pin,
 	       mode == GPIO_OUTPUT ? "OUTPUT" : "INPUT");
