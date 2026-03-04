@@ -140,11 +140,6 @@ void test_gpio_read()
 	printf("Finished testing gpio_read()\n");
 }
 
-void test_blink()
-{
-	printf("Testing blink - Not yet implemented\n");
-}
-
 int main()
 {
 	printf("Test Suite for GPIO\n");
@@ -159,7 +154,6 @@ int main()
 	test_gpio_configure();
 	test_gpio_write();
 	test_gpio_read();
-	test_blink();
 
 	// Final results
 	printf("Final Results: Test success/failed: %d / %d\n", tests_succeed,

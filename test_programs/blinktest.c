@@ -4,6 +4,16 @@
 #include <errno.h>
 #include <string.h>
 
+/*
+ * Blink test for GPIO syscalls
+ *
+ * NOTE: The Pi's onboard LED (pin 29) may have system triggers enabled
+ * by default (like disk activity). If blinking is erratic, disable with:
+ *   sudo sh -c "echo none > /sys/class/leds/ACT/trigger"
+ *
+ * This allows our syscalls to have sole control of the LED.
+ */
+
 #define __NR_gpio_configure 464
 #define __NR_gpio_write 465
 
